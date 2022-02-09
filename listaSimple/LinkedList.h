@@ -3,329 +3,329 @@
 
 using namespace std;
 
-class LinkedList
+class ListaEnlazada
 {
 private:
-    int m_count;
+    int contador;
 
 public:
     // The first node in the list
     // or null if empty
-    Node *Head;
+    Nodo *Cabecera;
 
     // The last node in the list
     // or null if empty
-    Node *Tail;
+    Nodo *Cola;
 
     // Constructor
-    LinkedList();
+    ListaEnlazada();
 
     // Get() operation
-    Node * Get(int index);
+    Nodo * Get(int indice);
 
     // Insert() operation
-    void InsertHead(int val);
-    void InsertTail(int val);
-    void Insert(int index, int val);
+    void InsertarInicio(int val);
+    void InsertarFinal(int val);
+    void Insertar(int indice, int val);
 
     // Search() operation
-    int Search(int val);
+    int Buscar(int val);
 
     // Remove() operation
-    void RemoveHead();
-    void RemoveTail();
-    void Remove(int index);
+    void RemoverInicio();
+    void RemoverFinal();
+    void Remover(int indice);
 
     // Additional operation
-    int Count();
-    void PrintList();
+    int Contador();
+    void ImprimirLista();
 };
 
-LinkedList::LinkedList(){
-    m_count = 0;
-    Head = NULL;
-    Tail = NULL;
+ListaEnlazada::ListaEnlazada(){
+    contador = 0;
+    Cabecera = NULL;
+    Cola = NULL;
 }
 
-Node * LinkedList::Get(int index)
+Nodo * ListaEnlazada::Get(int indice)
 {
     // Check if the index is out of bound
-    if(index < 0 || index > m_count)
+    if(indice < 0 || indice > contador)
         return NULL;
 
     // Start from the Head
-    Node * node = Head;
+    Nodo * nodo = Cabecera;
 
     // Iterate through the linked list elements
     // until it finds the selected index
-    for(int i = 0; i < index; i++)
+    for(int i = 0; i < indice; i++)
     {
-        node = node->Next;
+        nodo = nodo->Siguiente;
     }
 
     // Simply return the node result
-    return node;
+    return nodo;
 }
 
-void LinkedList::InsertHead(int val)
+void ListaEnlazada::InsertarInicio(int val)
 {
     // Create a new Node
-    Node * node = new Node(val);
+    Nodo * nodo = new Nodo(val);
 
     // The current Head will no longer become a Head
     // so the Next pointer of the new Node will
     // point to the current Head
-    node->Next = Head;
+    nodo->Siguiente = Cabecera;
 
     // The new Node now become the Head
-    Head = node;
+    Cabecera = nodo;
 
     // If the linked list is empty
     // The Tail is also the Head
-    if(m_count == 0)
-        Tail = Head;
+    if(contador == 0)
+        Cola = Cabecera;
 
     // One element is added
-    m_count++;
+    contador++;
 }
 
-void LinkedList::InsertTail(int val)
+void ListaEnlazada::InsertarFinal(int val)
 {
     // If the linked list is empty,
     // just simply invoke InsertHead()
-    if(m_count == 0)
+    if(contador == 0)
     {
-        InsertHead(val);
+        InsertarInicio(val);
         return;
     }
 
     // Create a new Node
-    Node * node = new Node(val);
+    Nodo * nodo = new Nodo(val);
 
     // The current Tail will no longer become a Tail
     // so the Next pointer of the current Tail will
     // point to the new node
-    Tail->Next = node;
+    Cola->Siguiente = nodo;
 
     // The new Node now become the Tail
-    Tail = node;
+    Cola = nodo;
 
     // One element is added
-    m_count++;
+    contador++;
 }
 
-void LinkedList::Insert(int index, int val)
+void ListaEnlazada::Insertar(int indice, int val)
 {
     // Check if the index is out of bound
-    if(index < 0 || index > m_count)
+    if(indice < 0 || indice > contador)
         return;
 
     // If inserting a new Head
-    if(index == 0)
+    if(indice == 0)
     {
-        InsertHead(val);
+        InsertarInicio(val);
         return;
     }
     // If inserting a new Tail
-    else if(index == m_count)
+    else if(indice == contador)
     {
-        InsertTail(val);
+        InsertarFinal(val);
         return;
     }
 
     // Start to find previous node
     // from the Head
-    Node * prevNode = Head;
+    Nodo * nodoAnterior = Cabecera;
 
     // Traverse the elements until
     // the selected index is found
-    for(int i = 0; i < index - 1; i++)
+    for(int i = 0; i < indice - 1; i++)
     {
-        prevNode = prevNode->Next;
+        nodoAnterior = nodoAnterior->Siguiente;
     }
 
     // Create the next node which is
     // the element after previous node
-    Node * nextNode = prevNode->Next;
+    Nodo * nodoSiguiente = nodoAnterior->Siguiente;
 
     // Create a new node
-    Node * node = new Node(val);
+    Nodo * node = new Nodo(val);
 
     // Insert this new node between
     // the previous node and the next node
-    node->Next = nextNode;
-    prevNode->Next = node;
+    node->Siguiente = nodoSiguiente;
+    nodoAnterior->Siguiente = node;
 
     // One element is added
-    m_count++;
+    contador++;
 }
 
-int LinkedList::Search(int val)
+int ListaEnlazada::Buscar(int val)
 {
     // If LinkedList is empty,
     // just return NOT_FOUND
-    if(m_count == 0)
+    if(contador == 0)
         return -1;
 
     // Need to count the index
-    int index = 0;
+    int indice = 0;
 
     // Traverse from the Head node
-    Node* node = Head;
+    Nodo* nodo = Cabecera;
 
     // Traverse until the selected value
     // is matched with the value
     // of the current position,
-    while(node->Value != val)
+    while(nodo->Valor != val)
     {
-        index++;
-        node = node->Next;
+        indice++;
+        nodo = nodo->Siguiente;
 
         // This will happen
         // if the selected value
         // is not found
-        if(node == NULL)
+        if(nodo == NULL)
         {
             return -1;
         }
     }
 
-    return index;
+    return indice;
 }
 
-void LinkedList::RemoveHead()
+void ListaEnlazada::RemoverInicio()
 {
     // Do nothing if list is empty
-    if(m_count == 0)
+    if(contador == 0)
         return;
 
     // Save the current Head
     // to a new node
-    Node * node = Head;
+    Nodo * nodo = Cabecera;
 
     // Point the Head Pointer
     // to the element next to the current Head
-    Head = Head->Next;
+    Cabecera = Cabecera->Siguiente;
 
     // Now it's safe to remove
     // the first element
-    delete node;
+    delete nodo;
 
     // One element is removed
-    m_count--;
+    contador--;
 }
 
-void LinkedList::RemoveTail()
+void ListaEnlazada::RemoverFinal()
 {
     // Do nothing if list is empty
-    if(m_count == 0)
+    if(contador == 0)
         return;
 
     // If List element is only one
     // just simply call RemoveHead()
-    if(m_count == 1)
+    if(contador == 1)
     {
-        RemoveHead();
+        RemoverInicio();
         return;
     }
 
     // Start to find previous node
     // from the Head
-    Node * prevNode = Head;
+    Nodo * nodoAnterior = Cabecera;
 
     // This is the candidate of
     // removed items which is
     // the element next to the prevNode
-    Node * node = Head->Next;
+    Nodo * nodo = Cabecera->Siguiente;
 
     // Traverse the elements until
     // the last element
-    while(node->Next != NULL)
+    while(nodo->Siguiente != NULL)
     {
-        prevNode = prevNode->Next;
-        node = node->Next;
+        nodoAnterior = nodoAnterior->Siguiente;
+        nodo = nodo->Siguiente;
     }
 
     // the prevNode now becomes the Tail
     // so the Next pointer of the prevNode
     // point to NULL
-    prevNode->Next = NULL;
-    Tail = prevNode;
+    nodoAnterior->Siguiente = NULL;
+    Cola = nodoAnterior;
 
     // Now it's safe to remove
     // the last element
-    delete node;
+    delete nodo;
 
     // One element is removed
-    m_count--;
+    contador--;
 }
 
-void LinkedList::Remove(int index)
+void ListaEnlazada::Remover(int indice)
 {
     // Do nothing if list is empty
-    if(m_count == 0)
+    if(contador == 0)
         return;
 
     // Do nothing if index is out of bound
-    if(index < 0 || index >= m_count)
+    if(indice < 0 || indice >= contador)
         return;
 
     // If removing the current Head
-    if(index == 0)
+    if(indice == 0)
     {
-        RemoveHead();
+        RemoverInicio();
         return;
     }
     // If removing the current Tail
-    else if(index == m_count - 1)
+    else if(indice == contador - 1)
     {
-        RemoveTail();
+        RemoverFinal();
         return;
     }
 
     // Start to traverse the list
     // from the Head
-    Node * prevNode = Head;
+    Nodo * nodoAnterior = Cabecera;
 
     // Find the element before
     // the selected index
-    for(int i = 0; i < index - 1; ++i)
+    for(int i = 0; i < indice - 1; ++i)
     {
-        prevNode = prevNode->Next;
+        nodoAnterior = nodoAnterior->Siguiente;
     }
 
     // The removed element is after
     // the prevNode
-    Node * node = prevNode->Next;
+    Nodo * node = nodoAnterior->Siguiente;
 
     // The nextNode will be the neighbor of
     // prevNode if the node is removed
-    Node * nextNode = node->Next;
+    Nodo * nodoSiguiente = node->Siguiente;
 
     // Link the prevNode to nextNode
-    prevNode->Next = nextNode;
+    nodoAnterior->Siguiente = nodoSiguiente;
 
     // It's now safe to remove
     // the selected index element
     delete node;
 
     // One element is removed
-    m_count--;
+    contador--;
 }
 
-int LinkedList::Count()
+int ListaEnlazada::Contador()
 {
-    return m_count;
+    return contador;
 }
 
-void LinkedList::PrintList()
+void ListaEnlazada::ImprimirLista()
 {
-    Node * node = Head;
+    Nodo * nodoSiguiente = Cabecera;
 
-    while(node != NULL)
+    while(nodoSiguiente != NULL)
     {
-        cout << node->Value << " -> ";
-        node = node->Next;
+        cout << nodoSiguiente->Valor << " -> ";
+        nodoSiguiente = nodoSiguiente->Siguiente;
     }
 
     cout << "NULL" <<endl;
