@@ -1,16 +1,14 @@
 #include <iostream>
-class Node
+class Nodo
 {
 public:
-    int Value;
-    Node * Next;
+    int Valor;
+    Nodo * Siguiente;
 
-    Node(int value);
+    Nodo(int valor);
 };
 
-Node::Node(int value){
-    Value = value;
-    Next = NULL;
+Nodo::Nodo(int valor){
+    Valor = valor;
+    Siguiente = NULL;
 }
-
-
