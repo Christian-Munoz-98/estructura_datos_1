@@ -6,6 +6,18 @@ using namespace std;
 int main()
 {
     ListaEnlazada *linkedList = new ListaEnlazada();
+    int index;
+    bool confirmation;
+
+    /*cout << "Buscar: " << endl;
+    index = linkedList->Buscar("ADIOS");
+    if(index==-1)
+        cout << "Elemento no encontrado..." << endl;
+    else
+        cout << "ADIOS: Encontrado en el indice " << index << endl;
+    cout << endl << endl;
+    */
+
     linkedList->InsertarInicio("HOLA");
     linkedList->InsertarInicio("MUNDO");
     linkedList->InsertarFinal(" CRUEL");
@@ -15,9 +27,14 @@ int main()
     linkedList->Insertar(0, "JIJIJI");
 
     linkedList->ImprimirLista();
-    cout << "Buscar: " << endl;
-    linkedList->Buscar("ADIOS");
+    /*cout << "Buscar: " << endl;
+    index = linkedList->Buscar("SDFDGFSD");
+    if(index==-1)
+        cout << "Elemento no encontrado..." << endl;
+    else
+        cout << "ADIOS: Encontrado en el indice " << index << endl;
     cout << endl << endl;
+    */
     
     // Remove first element
     cout << "Remover incio:" << endl;
@@ -30,7 +47,12 @@ int main()
 
     // Remove fifth element
     cout << "Remover por busqueda:" << endl;
-    linkedList->Remover("ADIOS");
+    confirmation = linkedList->Remover(linkedList->Buscar("ADIOS"));
+    if(!confirmation)
+        cout << "Elemento no encontrado..." << endl;
+    else
+        cout << "Elemento eliminado con exito"<< endl;
+    cout << endl << endl;
     // 76->43->15->48->100->NULL
     linkedList->ImprimirLista();
     cout << endl;
@@ -40,6 +62,18 @@ int main()
     linkedList->ImprimirLista();
     cout << endl;
 
-    cout<<"Tamano de lista: " << linkedList->Tamano();
+    cout<<"Tamano de lista: " << linkedList->Tamano() << endl;
+    cout<<"Primer elemento: " << linkedList->Primero()->frase << endl;
+    cout<<"Ultimo elemento: " << linkedList->Ultimo()->frase << endl;
+    linkedList->InsertarInicio("HOLA");
+    linkedList->InsertarInicio("MUNDO");
+    linkedList->InsertarFinal(" CRUEL");
+    linkedList->InsertarFinal("ADIOS");
+    linkedList->Insertar(4, "JAJAJAJA");
+    linkedList->Insertar(3, "JJEJEJE");
+    linkedList->Insertar(0, "JIJIJI");
+    linkedList->ImprimirLista();
+    linkedList->VaciarLista();
+    linkedList->ImprimirLista();
     return 0;
 }

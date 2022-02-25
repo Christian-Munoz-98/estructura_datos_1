@@ -14,7 +14,7 @@ public:
 
     ListaEnlazada();
 
-    void Buscar(string);
+    int Buscar(string);
 
     void InsertarInicio(string);
     void InsertarFinal(string);
@@ -22,10 +22,14 @@ public:
 
     void RemoverInicio();
     void RemoverFinal();
-    void Remover(string);
+    bool Remover(int);
+    void VaciarLista();
 
     int Tamano();
     void ImprimirLista();
+
+    Nodo* Primero();
+    Nodo* Ultimo();
 };
 
 ListaEnlazada::ListaEnlazada(){
@@ -34,31 +38,26 @@ ListaEnlazada::ListaEnlazada(){
     Cola = NULL;
 }
 
-void ListaEnlazada::Buscar(string frase){
-    Nodo* aux = Cabecera;
-    int indice=0;
-    bool ban=true;
+int ListaEnlazada::Buscar(string frase){
+    if(contador == 0)
+        return -1;
 
-    if(contador==0){
-        cout<<"Lista Vacia"<<endl;
-    }
-    else{
-        while(ban){
-            if(frase==aux->frase||aux==NULL)
-                ban=false;
-            else{
-                aux = aux->Siguiente;
-                indice++;
-            }
-        }
-        
-        if(aux!=NULL){
-            cout<< "Frase " << frase << ": encontrada en el indice " << to_string(indice) << endl;
-        }
-        else{
-            cout << "Frase no encontrada" << endl;
+    int indice = 0;
+
+    Nodo* nodo = Cabecera;
+
+    while(nodo->frase != frase)
+    {
+        indice++;
+        nodo = nodo->Siguiente;
+
+        if(nodo == NULL)
+        {
+            return -1;
         }
     }
+
+    return indice;
 }
 
 void ListaEnlazada::InsertarInicio(string frase){
@@ -157,33 +156,42 @@ void ListaEnlazada::RemoverFinal(){
     }
 }
 
-void ListaEnlazada::Remover(string frase)
-{
-    if(contador == 0){
-        cout<<"Lista vacia..."<<endl;
-    }
-    else{
-        Nodo* nodoAnterior = Cabecera;
-        bool ban=true;
+bool ListaEnlazada::Remover(int indice){
 
-        while(ban){
-            if(nodoAnterior->frase==frase||nodoAnterior!=NULL)
-                ban=false;
-            else
-                nodoAnterior = nodoAnterior->Siguiente;
-        }
+    if(contador == 0)
+        return false;
 
-        if(nodoAnterior!=NULL){
-            Nodo* nodo = nodoAnterior->Siguiente;
-            Nodo* nodoSiguiente = nodo->Siguiente;        
-            nodoAnterior->Siguiente = nodoSiguiente;
-            delete nodo;
-            contador--;
-        }
-        else{
-            cout<<"No se encontro el elemento..." << endl;
-        }
+    // Do nothing if index is out of bound
+    if(indice < 0 || indice >= contador)
+        return false;
+
+    // If removing the current Head
+    if(indice == 0){
+        RemoverInicio();
+        return true;
     }
+    else if(indice == contador - 1){
+        RemoverFinal();
+        return true;
+    }
+    
+    Nodo * nodoAnterior = Cabecera;
+
+    for(int i = 0; i < indice - 1; ++i)
+    {
+        nodoAnterior = nodoAnterior->Siguiente;
+    }
+
+    Nodo * node = nodoAnterior->Siguiente;
+
+    Nodo * nodoSiguiente = node->Siguiente;
+
+    nodoAnterior->Siguiente = nodoSiguiente;
+
+    delete node;
+
+    contador--;
+    return true;
 }
 
 int ListaEnlazada::Tamano(){
@@ -200,4 +208,21 @@ void ListaEnlazada::ImprimirLista(){
     }
 
     cout << "FIN" <<endl;
+}
+
+Nodo* ListaEnlazada::Primero(){
+    return this->Cabecera;
+}
+
+Nodo* ListaEnlazada::Ultimo(){
+    return this->Cola;
+}
+
+void ListaEnlazada::VaciarLista(){
+    int aux = contador;
+
+    for(int i=1;i<=aux;i++){
+        RemoverInicio();
+    }
+    cout << "Lista vaciada con exito" << endl;
 }
