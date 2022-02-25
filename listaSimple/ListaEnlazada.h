@@ -161,11 +161,9 @@ bool ListaEnlazada::Remover(int indice){
     if(contador == 0)
         return false;
 
-    // Do nothing if index is out of bound
     if(indice < 0 || indice >= contador)
         return false;
 
-    // If removing the current Head
     if(indice == 0){
         RemoverInicio();
         return true;
