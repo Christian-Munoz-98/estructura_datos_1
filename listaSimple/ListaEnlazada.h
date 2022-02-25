@@ -37,23 +37,23 @@ ListaEnlazada::ListaEnlazada(){
 void ListaEnlazada::Buscar(string frase){
     Nodo* aux = Cabecera;
     int indice=0;
-    bool ban=false;
+    bool ban=true;
 
     if(contador==0){
         cout<<"Lista Vacia"<<endl;
     }
     else{
-        while (aux!=NULL){
-            if(frase==aux->frase)
-                ban=true;
+        while(ban){
+            if(frase==aux->frase||aux==NULL)
+                ban=false;
             else{
                 aux = aux->Siguiente;
                 indice++;
             }
         }
-
+        
         if(aux!=NULL){
-            cout<< "Frase: " << frase << " encontrada en el indice " << to_string(indice) << endl;
+            cout<< "Frase " << frase << ": encontrada en el indice " << to_string(indice) << endl;
         }
         else{
             cout << "Frase no encontrada" << endl;
@@ -164,19 +164,25 @@ void ListaEnlazada::Remover(string frase)
     }
     else{
         Nodo* nodoAnterior = Cabecera;
+        bool ban=true;
 
-        while(nodoAnterior->Siguiente->frase!=frase||nodoAnterior!=NULL){
+        while(ban){
+            if(nodoAnterior->frase==frase||nodoAnterior!=NULL)
+                ban=false;
+            else
                 nodoAnterior = nodoAnterior->Siguiente;
         }
 
-        Nodo* nodo = nodoAnterior->Siguiente;
-        Nodo* nodoSiguiente = nodo->Siguiente;
-        
-        nodoAnterior->Siguiente = nodoSiguiente;
-
-        delete nodo;
-
-        contador--;
+        if(nodoAnterior!=NULL){
+            Nodo* nodo = nodoAnterior->Siguiente;
+            Nodo* nodoSiguiente = nodo->Siguiente;        
+            nodoAnterior->Siguiente = nodoSiguiente;
+            delete nodo;
+            contador--;
+        }
+        else{
+            cout<<"No se encontro el elemento..." << endl;
+        }
     }
 }
 
