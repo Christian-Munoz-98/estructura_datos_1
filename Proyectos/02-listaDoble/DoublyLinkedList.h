@@ -1,53 +1,42 @@
 #include <iostream>
-#include "Nodo.h"
+#include "DoublyNode.h"
 
-class DoublyLinkedList
-{
-    private:
-        int m_count;
+using namespace std;
 
-    public:
-        // The first node in the list
-        // or null if empty
-        DoublyNode* Head;
+class DoublyLinkedList{
+private:
+    int m_count;
 
-        // The last node in the list
-        // or null if empty
-        DoublyNode* Tail;
+public:
+    DoublyNode* Head;
+    DoublyNode* Tail;
+    
+    DoublyLinkedList();
 
-        // Constructor
-        DoublyLinkedList();
+    DoublyNode* Get(int);
 
-        // Get() operation
-        DoublyNode* Get(int index);
+    void InsertHead(int);
+    void InsertTail(int);
+    void Insert(int,int);
 
-        // Insert() operation
-        void InsertHead(int val);
-        void InsertTail(int val);
-        void Insert(int index, int val);
+    int Search(int);
 
-        // Search() operation
-        int Search(int val);
+    void RemoveHead();
+    void RemoveTail();
+    void Remove(int);
 
-        // Remove() operation
-        void RemoveHead();
-        void RemoveTail();
-        void Remove(int index);
-
-        // Additional operation
-        int Count();
-        void PrintList();
-        void PrintListBackward();
+    int Count();
+    void PrintList();
+    void PrintListBackward();
 };
 
 DoublyLinkedList::DoublyLinkedList(){
     m_count = 0;
     Head = NULL;
     Tail = NULL;
-};
+}
 
-DoublyNode* DoublyLinkedList::Get()
-{
+DoublyNode* DoublyLinkedList::Get(int index){
     // Check if the index is out of bound
     if(index < 0 || index > m_count)
         return NULL;
@@ -57,8 +46,7 @@ DoublyNode* DoublyLinkedList::Get()
 
     // Iterate through the linked list elements
     // until it finds the selected index
-    for(int i = 0; i < index; ++i)
-    {
+    for(int i = 0; i < index; ++i){
         node = node->Next;
     }
 
@@ -66,8 +54,7 @@ DoublyNode* DoublyLinkedList::Get()
     return node;
 }
 
-void DoublyLinkedList::InsertHead(int val)
-{
+void DoublyLinkedList::InsertHead(int val){
     // Create a new Node
     DoublyNode* node = new DoublyNode(val);
 
@@ -94,12 +81,10 @@ void DoublyLinkedList::InsertHead(int val)
     m_count++;
 }
 
-void DoublyLinkedList::InsertTail(int val)
-{
+void DoublyLinkedList::InsertTail(int val){
     // If the linked list is empty,
     // just simply invoke InsertHead()
-    if(m_count == 0)
-    {
+    if(m_count == 0){
         InsertHead(val);
         return;
     }
@@ -123,21 +108,18 @@ void DoublyLinkedList::InsertTail(int val)
     m_count++;
 }
 
-void DoublyLinkedList::Insert(int index,int val)
-{
+void DoublyLinkedList::Insert(int index, int val){
     // Check if the index is out of bound
     if(index < 0 || index > m_count)
         return;
 
     // If inserting a new Head
-    if(index == 0)
-    {
+    if(index == 0){
         InsertHead(val);
         return;
     }
     // If inserting a new Tail
-    else if(index == m_count)
-    {
+    else if(index == m_count){
         InsertTail(val);
         return;
     }
@@ -148,8 +130,7 @@ void DoublyLinkedList::Insert(int index,int val)
 
     // Traverse the elements until
     // the selected index is found
-    for(int i = 0; i < index - 1; ++i)
-    {
+    for(int i = 0; i < index - 1; ++i){
         prevNode = prevNode->Next;
     }
 
@@ -171,8 +152,7 @@ void DoublyLinkedList::Insert(int index,int val)
     m_count++;
 }
 
-int DoublyLinkedList::Search(int val)
-{
+int DoublyLinkedList::Search(int val){
     // If LinkedList is empty,
     // just return NOT_FOUND
     if(m_count == 0)
@@ -187,7 +167,7 @@ int DoublyLinkedList::Search(int val)
     // Traverse until the selected value
     // is matched with the value
     // of the current position,
-    while(node->Value != val)
+    while(node->value != val)
     {
         index++;
         node = node->Next;
@@ -195,8 +175,7 @@ int DoublyLinkedList::Search(int val)
         // This will happen
         // if the selected value
         // is not found
-        if(node == NULL)
-        {
+        if(node == NULL){
             return -1;
         }
     }
@@ -204,8 +183,7 @@ int DoublyLinkedList::Search(int val)
     return index;
 }
 
-void DoublyLinkedList::RemoveHead()
-{
+void DoublyLinkedList::RemoveHead(){
     // Do nothing if list is empty
     if(m_count == 0)
         return;
@@ -232,16 +210,14 @@ void DoublyLinkedList::RemoveHead()
     m_count--;
 }
 
-void DoublyLinkedList::RemoveTail()
-{
+void DoublyLinkedList::RemoveTail(){
     // Do nothing if list is empty
     if(m_count == 0)
         return;
 
     // If List element is only one
     // just simply call RemoveHead()
-    if(m_count == 1)
-    {
+    if(m_count == 1){
         RemoveHead();
         return;
     }
@@ -267,8 +243,7 @@ void DoublyLinkedList::RemoveTail()
     m_count--;
 }
 
-void DoublyLinkedList::Remove(int index)
-{
+void DoublyLinkedList::Remove(int index){
     // Do nothing if list is empty
     if(m_count == 0)
         return;
@@ -278,14 +253,12 @@ void DoublyLinkedList::Remove(int index)
         return;
 
     // If removing the current Head
-    if(index == 0)
-    {
+    if(index == 0){
         RemoveHead();
         return;
     }
     // If removing the current Tail
-    else if(index == m_count - 1)
-    {
+    else if(index == m_count - 1){
         RemoveTail();
         return;
     }
@@ -296,8 +269,7 @@ void DoublyLinkedList::Remove(int index)
 
     // Find the element before
     // the selected index
-    for(int i = 0; i < index - 1; ++i)
-    {
+    for(int i = 0; i < index - 1; ++i){
         prevNode = prevNode->Next;
     }
 
@@ -321,35 +293,28 @@ void DoublyLinkedList::Remove(int index)
     m_count--;
 }
 
-int DoublyLinkedList::Count()
-{
+int DoublyLinkedList::Count(){
     return m_count;
 }
 
-void DoublyLinkedList::PrintList()
-{
+void DoublyLinkedList::PrintList(){
     DoublyNode* node = Head;
 
-    while(node != NULL)
-    {
-        std::cout << node->Value << " -> ";
+    while(node != NULL){
+        cout << node->value << " -> ";
         node = node->Next;
     }
 
-    std::cout << "NULL" << std::endl;
+    cout << "NULL" << endl;
 }
 
-void DoublyLinkedList::PrintListBackward()
-{
+void DoublyLinkedList::PrintListBackward(){
     DoublyNode* node = Tail;
 
-    while(node != NULL)
-    {
-        std::cout << node->Value << " -> ";
+    while(node != NULL){
+        cout << node->value << " -> ";
         node = node->Previous;
     }
 
-    std::cout << "NULL" << std::endl;
+    cout << "NULL" << std::endl;
 }
-
-
