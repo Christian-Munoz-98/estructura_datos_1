@@ -1,16 +1,15 @@
 #include <iostream>
 #include "ListaDoble.h"
 
+using namespace std;
+void opciones(int);
+ListaDoble* lista = new ListaDoble();
 
 /*
 +Operaciones
 --anterior
 --siguiente
 */
-
-using namespace std;
-void opciones(int);
-ListaDoble* lista = new ListaDoble();
 
 int main(){
     int opc;
@@ -24,19 +23,20 @@ int main(){
         <<"6)Tamanho"<<endl
         <<"7)Vaciar"<<endl
         <<"8)Mostrar Lista"<<endl
-        <<"9)Salir"<<endl
+        <<"9)Mostrar Lista en Reversa"<<endl
+        <<"10)Salir"<<endl
         <<"Elija una opcion >>>>>";
         cin>>opc;
         opciones(opc);
-    }while(opc!=9);
+    }while(opc!=10);
     return 0;
 }
 
 void opciones(int opc){
+    string animalBuscar;
     char insert;
     int index;
-    //bool confirmation;
-    string animal;
+    bool confirmation;
     NodoDoble* NodoEncontrado;
     switch (opc){
     case 1:
@@ -61,6 +61,7 @@ void opciones(int opc){
                 break;
             default:
                 cout<<"Opcion invalida"<<endl;
+                system("pause");
                 break;
         }
         break;
@@ -69,9 +70,12 @@ void opciones(int opc){
         system("cls");
         cout << "ELIMINAR ELEMENTO" << endl << endl;
         cout << "Ingrese el nombre del animal a eliminar>>>";
-        cin >> animal;
-        lista->RemoverMedio(lista->BuscarIndice(animal));
-        cout << "Elemento removido con exito" << endl;
+        cin >> animalBuscar;
+        confirmation = lista->RemoverMedio(lista->BuscarIndice(animalBuscar));
+        if(confirmation)
+            cout << "Elemento removido con exito" << endl;
+        else
+            cout << "No fue posible remover el elemento debido a que no existe en la lista" << endl;
         system("pause");
         break;
 
@@ -79,33 +83,32 @@ void opciones(int opc){
         system("cls");
         cout << "BUSCAR ELEMENTO" << endl << endl;
         cout << "Inngrese el animal a buscar>>>";
-        cin >> animal;
-        NodoEncontrado = lista->Buscar(lista->BuscarIndice(animal));
-        NodoEncontrado->a.mostrar();
+        cin >> animalBuscar;
+        NodoEncontrado = lista->Buscar(lista->BuscarIndice(animalBuscar));
+        if(NodoEncontrado!=NULL)
+            NodoEncontrado->a.mostrar();
+        else
+            cout<<"Animal no encontrado en la lista..." << endl;
         system("pause");
         break;
     
     case 4:
         system("cls");
         cout << "MOSTRAR EL PRIMER ELEMENTO" << endl << endl;
-        if(lista->Cabecera==NULL){
+        if(lista->Cabecera==NULL)
             cout << "La lista esta vacia" << endl;
-        }
-        else{
+        else
             lista->Primero()->a.mostrar();
-        }
         system("pause");
         break;
 
     case 5:
         system("cls");
-        cout << "MOSTRAR EL PRIMER ELEMENTO" << endl << endl;
-        if(lista->Cabecera==NULL){
+        cout << "MOSTRAR EL ULTIMO ELEMENTO" << endl << endl;
+        if(lista->Cabecera==NULL)
             cout << "La lista esta vacia" << endl;
-        }
-        else{
+        else
             lista->Ultimo()->a.mostrar();
-        }
         system("pause");
         break;
         
@@ -137,6 +140,18 @@ void opciones(int opc){
         break;
 
     case 9:
+        system("cls");
+        cout << "MOSTRAR LISTA" << endl << endl;
+        if (lista->Cabecera==NULL){
+            cout << "La lista esta vacia" << endl;
+        }
+        else{
+            lista->MostrarReversa();
+        }
+        system("pause");
+        break;
+
+    case 10:
         system("cls");
         cout<<"Saliendo..."<<endl;
         system("pause");

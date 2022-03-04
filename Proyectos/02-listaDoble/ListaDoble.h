@@ -18,7 +18,7 @@ public:
 
     void RemoverInicio();
     void RemoverFinal();
-    void RemoverMedio(int);
+    bool RemoverMedio(int);
     void VaciarLista();
 
     NodoDoble* Buscar(int);
@@ -58,105 +58,98 @@ void ListaDoble::InsertarInicio(){
 void ListaDoble::InsertarFinal(){
     if(contador == 0){
         InsertarInicio();
-        return;
     }
-
-    NodoDoble* nuevoNodo = new NodoDoble(historico);
-
-    Cola->Siguiente = nuevoNodo;
-
-    nuevoNodo->Anterior = Cola;
-
-    Cola = nuevoNodo;
-
-    contador++;
-    historico++;
+    else{
+        NodoDoble* nuevoNodo = new NodoDoble(historico);
+        Cola->Siguiente = nuevoNodo;
+        nuevoNodo->Anterior = Cola;
+        Cola = nuevoNodo;
+        contador++;
+        historico++;
+    }
 }
 
 void ListaDoble::InsertarMedio(int indice){
-    if(indice < 0 || indice > contador)
-        return;
-
-    if(indice == 0){
+    if(indice < 0 || indice > contador){
+        cout<<"Indice fuera de rango"<<endl;
+        system("pause");
+    }
+    else if(indice == 0)
         InsertarInicio();
-        return;
-    }
-    else if(indice == contador){
+    else if(indice == contador)
         InsertarFinal();
-        return;
+    else{
+        NodoDoble* nodoAnterior = Cabecera;
+
+        for(int i = 0; i < indice-1; i++){
+            nodoAnterior = nodoAnterior->Siguiente;
+        }
+
+        NodoDoble* nodoSiguiente = nodoAnterior->Siguiente;
+
+        NodoDoble* nuevoNodo = new NodoDoble(historico);
+
+        nuevoNodo->Siguiente = nodoSiguiente;
+        nuevoNodo->Anterior = nodoAnterior;
+        nodoAnterior->Siguiente = nuevoNodo;
+        nodoSiguiente->Anterior = nuevoNodo;
+
+        contador++;
+        historico++;
     }
-
-    NodoDoble* nodoAnterior = Cabecera;
-
-    for(int i = 0; i < indice-1; i++){
-        nodoAnterior = nodoAnterior->Siguiente;
-    }
-
-    NodoDoble* nodoSiguiente = nodoAnterior->Siguiente;
-
-    NodoDoble* nuevoNodo = new NodoDoble(historico);
-
-    nuevoNodo->Siguiente = nodoSiguiente;
-    nuevoNodo->Anterior = nodoAnterior;
-    nodoAnterior->Siguiente = nuevoNodo;
-    nodoSiguiente->Anterior = nuevoNodo;
-
-    contador++;
-    historico++;
 }
 
 void ListaDoble::RemoverInicio(){
     if(contador == 0)
-        return;
+        cout<<"Lista vacia..."<<endl;
+    else{
+        NodoDoble* nodo = Cabecera;
 
-    NodoDoble* nodo = Cabecera;
+        Cabecera = Cabecera->Siguiente;
 
-    Cabecera = Cabecera->Siguiente;
+        delete nodo;
 
-    delete nodo;
+        if(Cabecera != NULL)
+            Cabecera->Anterior = NULL;
 
-    if(Cabecera != NULL)
-        Cabecera->Anterior = NULL;
-
-    contador--;
+        contador--;
+    }
 }
 
 void ListaDoble::RemoverFinal(){
     if(contador == 0)
-        return;
-
-    if(contador == 1){
+        cout<<"Lista Vacia..."<<endl;
+    if(contador == 1)
         RemoverInicio();
-        return;
+    else{
+        NodoDoble* nodo = Cola;
+
+        Cola = Cola->Anterior;
+
+        Cola->Siguiente = NULL;
+
+        delete nodo;
+
+        contador--;
     }
-
-    NodoDoble* nodo = Cola;
-
-    Cola = Cola->Anterior;
-
-    Cola->Siguiente = NULL;
-
-    delete nodo;
-
-    contador--;
 }
 
-void ListaDoble::RemoverMedio(int indice){
+bool ListaDoble::RemoverMedio(int indice){
     if(contador == 0)
-        return;
+        return false;
 
     if(indice < 0 || indice >= contador)
-        return;
+        return false;
 
     if(indice == 0){
         RemoverInicio();
-        return;
+        return true;
     }
     else if(indice == contador - 1){
         RemoverFinal();
-        return;
+        return true;
     }
-
+    
     NodoDoble* nodoAnterior = Cabecera;
 
     for(int i = 0; i < indice-1; i++){
@@ -173,6 +166,7 @@ void ListaDoble::RemoverMedio(int indice){
     delete nodo;
 
     contador--;
+    return true;
 }
 
 void ListaDoble::VaciarLista(){
