@@ -5,12 +5,6 @@ using namespace std;
 void opciones(int);
 ListaDoble* lista = new ListaDoble();
 
-/*
-+Operaciones
---anterior
---siguiente
-*/
-
 int main(){
     int opc;
     do{
@@ -141,7 +135,7 @@ void opciones(int opc){
 
     case 9:
         system("cls");
-        cout << "MOSTRAR LISTA" << endl << endl;
+        cout << "MOSTRAR LISTA EN REVERSA" << endl << endl;
         if (lista->Cabecera==NULL){
             cout << "La lista esta vacia" << endl;
         }
