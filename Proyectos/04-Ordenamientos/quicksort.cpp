@@ -29,8 +29,8 @@ public:
     void Remover();
     void Vaciar();
 
-    void Ordenar(NodoDoble*,NodoDoble*);//////
-    void Fusionar(NodoDoble*,NodoDoble*,NodoDoble*);//////
+    NodoDoble* Particion(NodoDoble*,NodoDoble*);
+    void QuickSort(NodoDoble*,NodoDoble*);
     void Mostrar();
 	void MostrarReversa();
 };
@@ -114,76 +114,38 @@ void ListaDoble::Vaciar(){
     cout << "Lista vaciada con exito" << endl;
 }
 
-void ListaDoble::Ordenar(NodoDoble* start,NodoDoble* end){////
-    if(start!=end){
-        int elements = 0;
-        NodoDoble* ref = start;
-        while (ref!=end){
-            ref=ref->Siguiente;
-            elements++;
+NodoDoble* ListaDoble::Particion(NodoDoble* inicio,NodoDoble* final){
+    cout<<"No errors in partitions"<<endl;
+    NodoDoble* pivote = inicio;
+    NodoDoble* enmedio = inicio;
+    NodoDoble* ref = inicio->Siguiente;
+    int tmp;
+    while(ref!=NULL){
+        if (ref->val<pivote->val){
+            enmedio=enmedio->Siguiente;
+            tmp = ref->val;
+            ref->val = enmedio->val;
+            enmedio->val = tmp;
         }
-
-        NodoDoble* middle = start;
-        for(int i=2;i<=(elements+1)/2;i++){
-            middle=middle->Siguiente;
-        }
-
-        Ordenar(start,middle);
-
-        Ordenar(middle->Siguiente,end);
-
-        Fusionar(start, middle, end);
+        ref=ref->Siguiente;
     }
-
-    return;
-}
-
-void ListaDoble::Fusionar(NodoDoble* start,NodoDoble* middle,NodoDoble* end){///
     
-    ListaDoble* tempList = new ListaDoble();
-    NodoDoble* left = start;
-    NodoDoble* right = middle->Siguiente;
+    tmp = inicio->val;
+    inicio->val = enmedio->val;
+    enmedio->val = tmp;
 
-    while ((left!=middle->Siguiente)&&(right!=end->Siguiente))
-    {
-        if(left->val <= right->val)
-        {
-            tempList->Insertar(left->val);
-
-            left=left->Siguiente;
-        }
-        else{
-            tempList->Insertar(right->val);
-
-            right=right->Siguiente;
-        }
-
-    }
-
-    while(left!=middle->Siguiente){
-        tempList->Insertar(left->val);
-
-        left=left->Siguiente;
-    }
-
-    while (right!=end->Siguiente){
-        tempList->Insertar(right->val);
-
-        right=right->Siguiente;
-
-    }
-
-    NodoDoble* tempStart = tempList->Cabecera;
-    while(start!=end->Siguiente){
-        start->val = tempStart->val;
-        start = start->Siguiente;
-        tempStart = tempStart->Siguiente;
-    }
-
-    delete tempList;
-
+    return enmedio;
+    
 }
 
+void ListaDoble::QuickSort(NodoDoble* inicio,NodoDoble* final){
+    if (inicio!=NULL&&final!=NULL){
+        //cout<<"No errors in sorting"<<endl;
+        NodoDoble* pivote = Particion(inicio,final);
+        QuickSort(inicio,pivote->Anterior);
+        QuickSort(pivote->Siguiente,final);
+    }
+}
 
 void ListaDoble::Mostrar(){
     NodoDoble* nodo = Cabecera;
@@ -196,18 +158,8 @@ void ListaDoble::Mostrar(){
     cout <<"Fin de la lista..." << endl;
 }
 
-void ListaDoble::MostrarReversa(){
-    NodoDoble* nodo = Cola;
-
-    while(nodo != NULL){
-        cout << nodo->val << ",";
-        nodo = nodo->Anterior;
-    }
-
-    cout <<"Fin de la lista..." << endl;
-}
-
-int main(){
+int main()
+{
 	ListaDoble* lista = new ListaDoble();
 
 	lista->Insertar(100);
@@ -242,7 +194,79 @@ int main(){
 	lista->Insertar(10000);
 	cout<<"Lista Desordenada: ";
 	lista->Mostrar();
-	lista->Ordenar(lista->Cabecera,lista->Cola);
+	lista->QuickSort(lista->Cabecera,lista->Cola);
 	cout<<"Lista Ordenada: ";
 	lista->Mostrar();
 }
+
+
+/*
+#include <iostream>
+
+using namespace std;
+
+int Partition(int arr[],int startIndex,int endIndex)//recibe nodo de inicio y nodo final
+{
+    int pivot = arr[startIndex]; //pivote empieza en el primer nodo
+
+
+    int middleIndex = startIndex; //medio empieza en el primer nodo
+
+    for (int i = startIndex + 1; i <= endIndex; ++i)//itera desde el nodo siguiente al inicio hasta el final
+    {
+        if (arr[i] < pivot)
+        {
+
+            ++middleIndex; //si el nodo actual es menor al pivote recorremos el nodo de en medio al siguiente
+
+            swap(arr[i], arr[middleIndex]); //intercambiamos el nodo actual y el de en medio
+        }
+    }
+
+    swap(arr[startIndex], arr[middleIndex]); //intercambiamos el nodo de inicio y el de en medio 
+
+    return middleIndex; //regresamos el nodo de en medio
+}
+
+void QuickSort(int arr[],int startIndex,int endIndex)//recibe nodo de inicio y final
+{
+
+    if (startIndex < endIndex) // que ninguno sea NULL
+    {
+
+        int pivotIndex = Partition(arr, startIndex, endIndex); //nodo pivote definido por particion 
+
+
+        QuickSort(arr, startIndex, pivotIndex - 1); // el inicio y el anterior del pivote
+
+
+        QuickSort(arr, pivotIndex + 1, endIndex); // siguiente del pivote y el final
+    }
+}
+
+int main()
+{
+    cout << "Quick Sort" << endl;
+
+    // Initialize a new array
+    int arr[] = {25, 21, 12, 40, 37, 43, 14, 28};
+    int arrSize = sizeof(arr)/sizeof(*arr);
+
+    // Display the initial array
+    cout << "Initial array: ";
+    for (int i=0; i < arrSize; ++i)
+        cout << arr[i] << " ";
+    cout << endl;
+
+    // Sort the array with QuickSort algorithm
+    QuickSort(arr, 0, arrSize - 1);
+
+    // Display the sorted array
+    cout << "Sorted array : ";
+    for (int i=0; i < arrSize; ++i)
+        cout << arr[i] << " ";
+    cout << endl;
+
+    return 0;
+}
+*/

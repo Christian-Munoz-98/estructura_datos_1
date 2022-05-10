@@ -7,25 +7,8 @@ public:
     float precio;
     int id;
 
-    void setNombre();
-    void setPrecio();
     void mostrar();
 };
-
-void Producto::setNombre(){
-    string nombre;
-    cout << "Ingrese el nombre del producto>>";
-    cin >> nombre;
-    this->nombre = nombre;
-}
-
-void Producto::setPrecio(){
-    float precio;
-    cout << "Ingrese el precio del producto>>";
-    cin >> precio;
-
-    this->precio = precio;
-}
 
 void Producto::mostrar(){
     cout<<"-------------" << endl
@@ -42,46 +25,47 @@ public:
     NodoDoble* Anterior;
     NodoDoble* Siguiente;
 
-    NodoDoble(int);
+    NodoDoble(string,float,int);
 };
 
-NodoDoble::NodoDoble(int historico){ 
-    p.setNombre();
-    p.setPrecio();
-    p.id = historico+1;
+NodoDoble::NodoDoble(string nombre,float precio,int id){
+    p.nombre = nombre;
+    p.precio = precio;
+    p.id = id;
     Anterior = NULL;
     Siguiente = NULL;
 }
 
 class ListaDoble{
 public:
-    int contador;   
-    int historico;
+    int contador;
     NodoDoble* Cabecera;
     NodoDoble* Cola;
     
     ListaDoble();
 
-    void InsertarInicio();
-    void InsertarFinal();
+    void InsertarInicio(string,float,int);
+    void InsertarFinal(string,float,int);
 
     void RemoverInicio();
     void RemoverFinal();
     void VaciarLista();
 
-    void OrdenarLista();
+    void InsertSort();
+    void MergeSort(NodoDoble*,NodoDoble*);
+    void Fusionar(NodoDoble*,NodoDoble*,NodoDoble*);
+    void SelectionSort();
     void MostrarLista();
 };
 
 ListaDoble::ListaDoble(){
     contador = 0;
-    historico = 0;
     Cabecera = NULL;
     Cola = NULL;
 }
 
-void ListaDoble::InsertarInicio(){
-    NodoDoble* nuevoNodo = new NodoDoble(historico);
+void ListaDoble::InsertarInicio(string nombre,float precio,int id){
+    NodoDoble* nuevoNodo = new NodoDoble(nombre,precio,id);
 
     nuevoNodo->Siguiente = Cabecera;
 
@@ -94,20 +78,18 @@ void ListaDoble::InsertarInicio(){
         Cola = Cabecera;
 
     contador++;
-    historico++;
 }
 
-void ListaDoble::InsertarFinal(){
+void ListaDoble::InsertarFinal(string nombre,float precio,int id){
     if(contador == 0){
-        InsertarInicio();
+        InsertarInicio(nombre,precio,id);
     }
     else{
-        NodoDoble* nuevoNodo = new NodoDoble(historico);
+        NodoDoble* nuevoNodo = new NodoDoble(nombre,precio,id);
         Cola->Siguiente = nuevoNodo;
         nuevoNodo->Anterior = Cola;
         Cola = nuevoNodo;
         contador++;
-        historico++;
     }
 }
 
@@ -156,7 +138,7 @@ void ListaDoble::VaciarLista(){
     cout << "Lista vaciada con exito" << endl;
 }
 
-void ListaDoble::OrdenarLista(){
+void ListaDoble::InsertSort(){
 	NodoDoble* refNode = Cabecera->Siguiente;
 	bool ban;
     while(refNode!=NULL){
@@ -179,6 +161,103 @@ void ListaDoble::OrdenarLista(){
     }
 }
 
+void ListaDoble::MergeSort(NodoDoble* start,NodoDoble* end){////
+    if(start!=end){
+        int elements = 0;
+        NodoDoble* ref = start;
+        while (ref!=end){
+            ref=ref->Siguiente;
+            elements++;
+        }
+
+        NodoDoble* middle = start;
+        for(int i=2;i<=(elements+1)/2;i++){
+            middle=middle->Siguiente;
+        }
+
+        MergeSort(start,middle);
+
+        MergeSort(middle->Siguiente,end);
+
+        Fusionar(start, middle, end);
+    }
+
+    return;
+}
+
+void ListaDoble::Fusionar(NodoDoble* start,NodoDoble* middle,NodoDoble* end){///
+    
+    ListaDoble* tempList = new ListaDoble();
+    NodoDoble* left = start;
+    NodoDoble* right = middle->Siguiente;
+
+    while ((left!=middle->Siguiente)&&(right!=end->Siguiente))
+    {
+        if(left->p.precio <= right->p.precio)
+        {
+            tempList->InsertarFinal(left->p.nombre,left->p.precio,left->p.id);
+
+            left=left->Siguiente;
+        }
+        else{
+            tempList->InsertarFinal(right->p.nombre,right->p.precio,right->p.id);
+
+            right=right->Siguiente;
+        }
+
+    }
+
+    while(left!=middle->Siguiente){
+        tempList->InsertarFinal(left->p.nombre,left->p.precio,left->p.id);
+
+        left=left->Siguiente;
+    }
+
+    while (right!=end->Siguiente){
+        tempList->InsertarFinal(right->p.nombre,right->p.precio,right->p.id);
+
+        right=right->Siguiente;
+
+    }
+
+    NodoDoble* tempStart = tempList->Cabecera;
+    while(start!=end->Siguiente){
+        start->p = tempStart->p;
+        start = start->Siguiente;
+        tempStart = tempStart->Siguiente;
+    }
+
+    delete tempList;
+
+}
+
+void ListaDoble::SelectionSort(){
+    NodoDoble* minimo;
+    NodoDoble* ref = Cabecera;
+    NodoDoble* refNext;
+    bool swap;
+    while (ref!=Cola){
+        swap = false;
+        refNext = ref->Siguiente;
+        minimo = ref;
+        while (refNext!=NULL){
+            if (refNext->p.precio<minimo->p.precio){
+                minimo=refNext;
+                swap = true;
+            }
+            refNext = refNext->Siguiente;
+        }
+
+        if (swap){
+            Producto tmp = ref->p;
+            ref->p = minimo->p;
+            minimo->p =tmp;            
+        }
+        ref=ref->Siguiente;
+    }
+    
+}
+
 void ListaDoble::MostrarLista(){
     NodoDoble* nodo = Cabecera;
 
@@ -191,9 +270,29 @@ void ListaDoble::MostrarLista(){
 }
 
 void opciones(int);
-ListaDoble* lista = new ListaDoble();
 
 int main(){
+    ListaDoble* lista = new ListaDoble();
+
+    lista->InsertarFinal("Cocacola",20.5,1);
+    lista->InsertarFinal("Rocaleta",13.6,2);
+    lista->InsertarFinal("Pinwinos",25.4,3);
+    lista->InsertarFinal("Manzanas",30,4);
+    lista->InsertarFinal("Chocolate",7.67,5);
+    lista->InsertarFinal("Papel",67.65,6);
+    lista->InsertarFinal("Pollo",12.54,7);
+    lista->InsertarFinal("Carne",105.32,8);
+    lista->InsertarFinal("Cheetos",10.5,9);
+    lista->InsertarFinal("Sabritas",17,10);
+    cout<<" Lista Antes de ordenar: " << endl <<endl;
+    lista->MostrarLista();
+    lista->SelectionSort();
+    cout<< endl << " Lista Despues de ordenar: " << endl << endl;
+    lista->MostrarLista();
+    
+    return 0;
+}
+/*    
     int opc;
     do{
         system("cls");
@@ -255,7 +354,7 @@ void opciones(int opc){
             cout << "La lista esta vacia" << endl;
         }
         else{
-            lista->OrdenarLista();
+            lista->InsertSort();
             cout<<"Lista ordenada exitosamente..."<<endl;
         }
         system("pause");
@@ -273,7 +372,8 @@ void opciones(int opc){
         system("pause");
         break;
     }
-}
+*/
+
 
 
 
