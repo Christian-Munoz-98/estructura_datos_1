@@ -55,6 +55,8 @@ public:
     void MergeSort(NodoDoble*,NodoDoble*);
     void Fusionar(NodoDoble*,NodoDoble*,NodoDoble*);
     void SelectionSort();
+    NodoDoble* Particion(NodoDoble*,NodoDoble*);
+    void QuickSort(NodoDoble*,NodoDoble*);
     void MostrarLista();
 };
 
@@ -258,6 +260,37 @@ void ListaDoble::SelectionSort(){
     
 }
 
+NodoDoble* ListaDoble::Particion(NodoDoble* inicio,NodoDoble* final){
+    NodoDoble* pivote = inicio;
+    NodoDoble* enmedio = inicio;
+    NodoDoble* ref = inicio->Siguiente;
+    Producto tmp;
+    while(ref!=NULL){
+        if (ref->p.precio<pivote->p.precio){
+            enmedio=enmedio->Siguiente;
+            tmp = ref->p;
+            ref->p = enmedio->p;
+            enmedio->p = tmp;
+        }
+        ref=ref->Siguiente;
+    }
+    
+    tmp = inicio->p;
+    inicio->p = enmedio->p;
+    enmedio->p = tmp;
+
+    return enmedio;
+    
+}
+
+void ListaDoble::QuickSort(NodoDoble* inicio,NodoDoble* final){
+    if (final != NULL && inicio != final && inicio != final->Siguiente){
+        NodoDoble* pivote = Particion(inicio,final);
+        QuickSort(inicio,pivote->Anterior);
+        QuickSort(pivote->Siguiente,final);
+    }
+}
+
 void ListaDoble::MostrarLista(){
     NodoDoble* nodo = Cabecera;
 
@@ -271,67 +304,69 @@ void ListaDoble::MostrarLista(){
 
 void opciones(int);
 
-int main(){
-    ListaDoble* lista = new ListaDoble();
+ListaDoble* lista = new ListaDoble();
 
-    lista->InsertarFinal("Cocacola",20.5,1);
-    lista->InsertarFinal("Rocaleta",13.6,2);
-    lista->InsertarFinal("Pinwinos",25.4,3);
-    lista->InsertarFinal("Manzanas",30,4);
-    lista->InsertarFinal("Chocolate",7.67,5);
-    lista->InsertarFinal("Papel",67.65,6);
-    lista->InsertarFinal("Pollo",12.54,7);
-    lista->InsertarFinal("Carne",105.32,8);
-    lista->InsertarFinal("Cheetos",10.5,9);
-    lista->InsertarFinal("Sabritas",17,10);
-    cout<<" Lista Antes de ordenar: " << endl <<endl;
-    lista->MostrarLista();
-    lista->SelectionSort();
-    cout<< endl << " Lista Despues de ordenar: " << endl << endl;
-    lista->MostrarLista();
-    
-    return 0;
-}
-/*    
+int main(){
     int opc;
     do{
         system("cls");
         cout<<"1)Anadir producto"<<endl
-        <<"2)Eliminar producto" <<endl
+        <<"2)Eliminar ultimo producto" <<endl
         <<"3)Vaciar inventario"<<endl
         <<"4)Mostrar Lista"<<endl
-        <<"5)Ordenar Lista"<<endl
-        <<"6)Salir"<<endl
+        <<"5)Ordenar Lista (Insert Sort)"<<endl
+        <<"6)Ordenar Lista (Merge Sort)"<<endl
+        <<"7)Ordenar Lista (Selection Sort)"<<endl
+        <<"8)Ordenar Lista (Quick Sort)"<<endl
+        <<"9)Salir"<<endl
         <<"Elija una opcion >>>>>";
         cin>>opc;
         opciones(opc);
-    }while(opc!=6);
+    }while(opc!=9);
     return 0;
 }
 
 void opciones(int opc){
     bool confirmation;
     NodoDoble* NodoEncontrado;
+    string nombre;
+    float precio;
+    int id;
     switch (opc){
     case 1:
         system("cls");
         cout << "ANADIR PRODUCTO" << endl << endl;
-        lista->InsertarFinal();
+        cout<<"Indique nombre: ";
+        cin>>nombre;
+        cout<<"Indique precio: ";
+        cin>>precio;
+        cout<<"Indique id: ";
+        cin>>id;        
+        lista->InsertarFinal(nombre,precio,id);
         system("pause");
         break;
 
     case 2:
-        system("cls");
         cout << "ELIMINAR PRODUCTO" << endl << endl;
-        lista->RemoverFinal();
-        cout<<"Producto eliminado"<<endl;
+        system("cls");
+        if (lista->Cabecera==NULL){
+            cout << "La lista esta vacia" << endl;
+        }
+        else{
+            lista->RemoverFinal();
+            cout<<"Producto eliminado"<<endl;       
+        }
         system("pause");
         break;
 
     case 3:
         system("cls");
         cout << "VACIAR LA LISTA" << endl << endl;
-        lista->VaciarLista();
+        if (lista->Cabecera==NULL){
+            cout << "La lista esta vacia" << endl;
+        }
+        else
+            lista->VaciarLista();
         system("pause");
         break;
 
@@ -348,19 +383,70 @@ void opciones(int opc){
         break;
 
     case 5:
+    {
         system("cls");
-        cout << "ORDENAR LISTA" << endl << endl;
+        ListaDoble* insertlist = lista;
+        cout << "ORDENAR LISTA (INSERT SORT)" << endl << endl;
         if (lista->Cabecera==NULL){
             cout << "La lista esta vacia" << endl;
         }
         else{
-            lista->InsertSort();
+            insertlist->InsertSort();
             cout<<"Lista ordenada exitosamente..."<<endl;
+            insertlist->MostrarLista();
         }
         system("pause");
         break;
-
+    }
     case 6:
+    {
+        system("cls");
+        ListaDoble* mergelist = lista;
+        cout << "ORDENAR LISTA (MERGE SORT)" << endl << endl;
+        if (lista->Cabecera==NULL){
+            cout << "La lista esta vacia" << endl;
+        }
+        else{
+            mergelist->MergeSort(mergelist->Cabecera,mergelist->Cola);
+            cout<<"Lista ordenada exitosamente..."<<endl;
+            mergelist->MostrarLista();
+        }
+        system("pause");
+        break;
+    }
+    case 7:
+    {
+        system("cls");
+        ListaDoble* selectionlist = lista;
+        cout << "ORDENAR LISTA (SELECTION SORT)" << endl << endl;
+        if (lista->Cabecera==NULL){
+            cout << "La lista esta vacia" << endl;
+        }
+        else{
+            selectionlist->SelectionSort();
+            cout<<"Lista ordenada exitosamente..."<<endl;
+            selectionlist->MostrarLista();
+        }
+        system("pause");
+        break;
+    }
+    case 8:
+    {
+        system("cls");
+        ListaDoble* quicklist = lista;
+        cout << "ORDENAR LISTA (SELECTION SORT)" << endl << endl;
+        if (lista->Cabecera==NULL){
+            cout << "La lista esta vacia" << endl;
+        }
+        else{
+            quicklist->QuickSort(quicklist->Cabecera,quicklist->Cola);
+            cout<<"Lista ordenada exitosamente..."<<endl;
+            quicklist->MostrarLista();
+        }
+        system("pause");
+        break;
+    }
+    case 9:
         system("cls");
         cout<<"Saliendo..."<<endl;
         system("pause");
@@ -372,7 +458,7 @@ void opciones(int opc){
         system("pause");
         break;
     }
-*/
+}
 
 
 
