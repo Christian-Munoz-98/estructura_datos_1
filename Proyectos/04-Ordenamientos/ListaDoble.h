@@ -17,7 +17,7 @@ public:
 
     void InsertSort();
     void MergeSort(NodoDoble*,NodoDoble*);
-    void Fusionar(NodoDoble*,NodoDoble*,NodoDoble*);
+    void Fusion(NodoDoble*,NodoDoble*,NodoDoble*);
     void SelectionSort();
     NodoDoble* Particion(NodoDoble*,NodoDoble*);
     void QuickSort(NodoDoble*,NodoDoble*);
@@ -127,69 +127,69 @@ void ListaDoble::InsertSort(){
     }
 }
 
-void ListaDoble::MergeSort(NodoDoble* start,NodoDoble* end){////
-    if(start!=end){
-        int elements = 0;
-        NodoDoble* ref = start;
-        while (ref!=end){
+void ListaDoble::MergeSort(NodoDoble* inicio,NodoDoble* final){////
+    if(inicio!=final){
+        int elementos = 0;
+        NodoDoble* ref = inicio;
+        while (ref!=final){
             ref=ref->Siguiente;
-            elements++;
+            elementos++;
         }
 
-        NodoDoble* middle = start;
-        for(int i=2;i<=(elements+1)/2;i++){
-            middle=middle->Siguiente;
+        NodoDoble* medio = inicio;
+        for(int i=2;i<=(elementos+1)/2;i++){
+            medio=medio->Siguiente;
         }
 
-        MergeSort(start,middle);
+        MergeSort(inicio,medio);
 
-        MergeSort(middle->Siguiente,end);
+        MergeSort(medio->Siguiente,final);
 
-        Fusionar(start, middle, end);
+        Fusion(inicio, medio, final);
     }
 
     return;
 }
 
-void ListaDoble::Fusionar(NodoDoble* start,NodoDoble* middle,NodoDoble* end){///
+void ListaDoble::Fusion(NodoDoble* inicio,NodoDoble* medio,NodoDoble* final){///
     
     ListaDoble* tempList = new ListaDoble();
-    NodoDoble* left = start;
-    NodoDoble* right = middle->Siguiente;
+    NodoDoble* izquierda = inicio;
+    NodoDoble* derecha = medio->Siguiente;
 
-    while ((left!=middle->Siguiente)&&(right!=end->Siguiente))
+    while ((izquierda!=medio->Siguiente)&&(derecha!=final->Siguiente))
     {
-        if(left->p.precio <= right->p.precio)
+        if(izquierda->p.precio <= derecha->p.precio)
         {
-            tempList->InsertarFinal(left->p.nombre,left->p.precio,left->p.id);
+            tempList->InsertarFinal(izquierda->p.nombre,izquierda->p.precio,izquierda->p.id);
 
-            left=left->Siguiente;
+            izquierda=izquierda->Siguiente;
         }
         else{
-            tempList->InsertarFinal(right->p.nombre,right->p.precio,right->p.id);
+            tempList->InsertarFinal(derecha->p.nombre,derecha->p.precio,derecha->p.id);
 
-            right=right->Siguiente;
+            derecha=derecha->Siguiente;
         }
 
     }
 
-    while(left!=middle->Siguiente){
-        tempList->InsertarFinal(left->p.nombre,left->p.precio,left->p.id);
+    while(izquierda!=medio->Siguiente){
+        tempList->InsertarFinal(izquierda->p.nombre,izquierda->p.precio,izquierda->p.id);
 
-        left=left->Siguiente;
+        izquierda=izquierda->Siguiente;
     }
 
-    while (right!=end->Siguiente){
-        tempList->InsertarFinal(right->p.nombre,right->p.precio,right->p.id);
+    while (derecha!=final->Siguiente){
+        tempList->InsertarFinal(derecha->p.nombre,derecha->p.precio,derecha->p.id);
 
-        right=right->Siguiente;
+        derecha=derecha->Siguiente;
 
     }
 
     NodoDoble* tempStart = tempList->Cabecera;
-    while(start!=end->Siguiente){
-        start->p = tempStart->p;
-        start = start->Siguiente;
+    while(inicio!=final->Siguiente){
+        inicio->p = tempStart->p;
+        inicio = inicio->Siguiente;
         tempStart = tempStart->Siguiente;
     }
 
@@ -200,18 +200,18 @@ void ListaDoble::Fusionar(NodoDoble* start,NodoDoble* middle,NodoDoble* end){///
 void ListaDoble::SelectionSort(){
     NodoDoble* minimo;
     NodoDoble* ref = Cabecera;
-    NodoDoble* refNext;
+    NodoDoble* refsig;
     bool swap;
     while (ref!=Cola){
         swap = false;
-        refNext = ref->Siguiente;
+        refsig = ref->Siguiente;
         minimo = ref;
-        while (refNext!=NULL){
-            if (refNext->p.precio<minimo->p.precio){
-                minimo=refNext;
+        while (refsig!=NULL){
+            if (refsig->p.precio<minimo->p.precio){
+                minimo=refsig;
                 swap = true;
             }
-            refNext = refNext->Siguiente;
+            refsig = refsig->Siguiente;
         }
 
         if (swap){

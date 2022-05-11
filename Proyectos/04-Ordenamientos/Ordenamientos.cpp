@@ -26,8 +26,6 @@ int main(){
 }
 
 void opciones(int opc){
-    bool confirmation;
-    NodoDoble* NodoEncontrado;
     string nombre;
     float precio;
     int id;
