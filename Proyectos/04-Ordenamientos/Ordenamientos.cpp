@@ -303,6 +303,7 @@ void ListaDoble::MostrarLista(){
 }
 
 void opciones(int);
+ListaDoble* copiarlista(ListaDoble*);
 
 ListaDoble* lista = new ListaDoble();
 
@@ -385,7 +386,7 @@ void opciones(int opc){
     case 5:
     {
         system("cls");
-        ListaDoble* insertlist = lista;
+        ListaDoble* insertlist = copiarlista(lista);
         cout << "ORDENAR LISTA (INSERT SORT)" << endl << endl;
         if (lista->Cabecera==NULL){
             cout << "La lista esta vacia" << endl;
@@ -401,7 +402,7 @@ void opciones(int opc){
     case 6:
     {
         system("cls");
-        ListaDoble* mergelist = lista;
+        ListaDoble* mergelist = copiarlista(lista);
         cout << "ORDENAR LISTA (MERGE SORT)" << endl << endl;
         if (lista->Cabecera==NULL){
             cout << "La lista esta vacia" << endl;
@@ -417,7 +418,7 @@ void opciones(int opc){
     case 7:
     {
         system("cls");
-        ListaDoble* selectionlist = lista;
+        ListaDoble* selectionlist = copiarlista(lista);
         cout << "ORDENAR LISTA (SELECTION SORT)" << endl << endl;
         if (lista->Cabecera==NULL){
             cout << "La lista esta vacia" << endl;
@@ -433,7 +434,7 @@ void opciones(int opc){
     case 8:
     {
         system("cls");
-        ListaDoble* quicklist = lista;
+        ListaDoble* quicklist = copiarlista(lista);
         cout << "ORDENAR LISTA (SELECTION SORT)" << endl << endl;
         if (lista->Cabecera==NULL){
             cout << "La lista esta vacia" << endl;
@@ -460,6 +461,17 @@ void opciones(int opc){
     }
 }
 
+ListaDoble* copiarlista(ListaDoble*original){
+    ListaDoble* copia = new ListaDoble();
 
+    NodoDoble* ref = original->Cabecera;
+
+    while(ref){
+        copia->InsertarFinal(ref->p.nombre,ref->p.precio,ref->p.id);
+        ref = ref->Siguiente;
+    }
+
+    return copia;
+}
 
 
